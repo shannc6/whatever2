@@ -51,10 +51,6 @@ def compare_images2(imageAPath, imageBPath):
     plt.imshow(img)
     plt.show()
 
-def test(a):
-    if a == 1:
-        t = 0
-    print(t)
 
 if __name__ == "__main__":
     a = 0
