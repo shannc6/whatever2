@@ -16,10 +16,10 @@ def get_percent(jwt):
     try:
         imageA = request.args.get('imageA')
         imageB = request.args.get('imageB')
-        ssim = compare_images(imageA, imageB)
+        percentage = compare_images(imageA, imageB)
         return jsonify({
             'success': True,
-            'percentage': ssim
+            'percentage': percentage
         })
     except:
        abort(404)
