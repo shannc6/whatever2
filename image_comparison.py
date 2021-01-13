@@ -38,15 +38,12 @@ def compare_images(imageAPath, imageBPath):
     imageB = io.imread(imageBPath) if validators.url(imageBPath) else cv2.imread(imageBPath)
     # check the same image. If image the same, no need to compute the rest
     if isSameImg(imageA, imageB):
-        return 1
+        return "100%"
     
     # Check for similarities between the 2 images
     sift = cv2.xfeatures2d.SIFT_create()
     kp_1, desc_1 = sift.detectAndCompute(imageA, None)
     kp_2, desc_2 = sift.detectAndCompute(imageB, None)
-
-    # print('kp_1: ', kp_1)
-    # print('kp_2: ', kp_2)
     index_params = dict(algorithm=0, trees=5)
     search_params = dict()
     flann = cv2.FlannBasedMatcher(index_params, search_params)
@@ -59,7 +56,7 @@ def compare_images(imageAPath, imageBPath):
             good_points.append(m)
 
     number_keypoints = len(kp_1) if len(kp_1) <= len(kp_2) else len(kp_2)
-    percentage = len(good_points) / number_keypoints * 100
+    percentage = '{0:.2f}'.format(len(good_points) / number_keypoints * 100) + "%"
     return percentage
 
 if __name__ == '__main__':
@@ -67,7 +64,7 @@ if __name__ == '__main__':
     percentage =  compare_images('original_golden_bridge.jpg', 'textured.jpg')
     print(percentage)
 
-    # expect to be 35
+    # expect to be 36
     percentage =  compare_images('original_golden_bridge.jpg', 'old_photo.jpg')
     print(percentage)
 
