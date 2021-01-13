@@ -1,20 +1,17 @@
-# import the necessary packages
-#from skimage.measure import structural_similarity as ssim
-from skimage import measure
+import urllib
+import urllib.request
+from io import BytesIO
 
-from skimage import io
 import matplotlib.pyplot as plt
 import numpy as np
 import requests
-import urllib
-import cv2 
 from PIL import Image
-from io import BytesIO
-import urllib.request
-import validators
-import matplotlib.pyplot as plt
+from skimage import io, measure
 
-# METHOD #1: OpenCV, NumPy, and urllib
+import cv2
+import validators
+
+
 def url_to_image(url):
     # download the image, convert it to a NumPy array, and then read
     # it into OpenCV format
@@ -25,10 +22,27 @@ def url_to_image(url):
     return image
 
 def isUrl(path):
+    # TODO: Not sure why you need the wrapper 
+    """Checks if the given path is a valid url.
+    
+    Args:
+    """
     valid = validators.url(path)
     return valid
 
 def processUrl(url):
+    """Gets the image from the given url.
+
+    Retrieves the image from the given url and save it as a image.  
+
+    Args:
+      url:
+        The url to retrieve the image from.
+      
+    Returns:
+      An image that is loaded from the url.
+
+    """
     response = requests.get(url)
     img = Image.open(BytesIO(response.content))
     img = img.save('local.jpg')
@@ -36,6 +50,18 @@ def processUrl(url):
     return imgRead
 
 def compare_images(imageAPath, imageBPath):
+    """ Compares the structural similarity of the two given images.
+
+    Args:
+        imageAPath:
+        imageBPath:
+
+    Returns:
+        # TODO: Return percentage, or what unit?
+        The percentage of the similarity of two given images.
+        (0 completely different, 1 the same)  
+    
+    """
     # compute the mean squared error and structural similarity
     imageA = processUrl(imageAPath) if isUrl(imageAPath) else cv2.imread(imageAPath)
     imageB = processUrl(imageBPath) if isUrl(imageBPath) else cv2.imread(imageBPath)
@@ -53,7 +79,6 @@ def compare_images2(imageAPath, imageBPath):
 
 
 if __name__ == "__main__":
-    a = 0
     #test()
     # imageA = cv2.imread("IMG_7162.JPG")
     # imageB = cv2.imread("black.jpg")
