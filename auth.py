@@ -1,9 +1,11 @@
 import json
-from flask import request, _request_ctx_stack, abort
-from functools import wraps
-from jose import jwt
-from urllib.request import urlopen
 import sys
+from functools import wraps
+from urllib.request import urlopen
+
+from jose import jwt  
+
+from flask import _request_ctx_stack, abort, request
 
 AUTH0_DOMAIN = 'jeffreyfsnd.auth0.com'
 ALGORITHMS = ['RS256']
@@ -157,5 +159,3 @@ def requires_auth(permission=''):
 
         return wrapper
     return requires_auth_decorator
-
-
