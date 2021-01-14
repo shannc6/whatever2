@@ -102,7 +102,7 @@ Authentication error (401)
 #### Test
 To run the test, run 
 ```bash
-python test.py
+python3 test.py
 ```
 The authentication key will expires in 24 hours, please ask for new authentication token if you need access.
 
