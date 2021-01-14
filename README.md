@@ -83,14 +83,6 @@ Not found error (404)
 }
 ```
 
-Unprocessable error (422)
-```bash
-{
-    "success": False,
-    "error": 422,
-    "message": "unprocessable"
-}
-```
 Authentication error (401)
 ```bash
 {

@@ -12,25 +12,6 @@ import jwt
 from jwt import PyJWKClient
 
 class Image:
-    def encode_auth_token(self):
-        """
-        Generates the Auth Token
-        :return: string
-        """
-        try:
-            payload = {
-                'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=5),
-                'iat': datetime.datetime.utcnow()
-            }
-            return jwt.encode(
-                payload,
-                config.Bearer,
-                algorithm='RS256'
-            )
-            
-        except Exception as e:
-            return e
-
     def create_app(self, test_config=None):
         app = Flask(__name__)
 
@@ -49,14 +30,6 @@ class Image:
                 abort(404)
 
         # Error Handling
-        @app.errorhandler(422)
-        def unprocessable(error):
-            return jsonify({
-                "success": False,
-                "error": 422,
-                "message": "unprocessable"
-            }), 422
-
         @app.errorhandler(404)
         def not_found(error):
             return jsonify({
@@ -75,5 +48,6 @@ class Image:
         return app
 
 if __name__ == "__main__":
-    app = Image.create_app()
+    image = Image()
+    app = image.create_app()
     app.run(debug=True)
