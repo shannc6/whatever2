@@ -1,75 +1,69 @@
-import os
-import urllib
-import urllib.request
-from io import BytesIO
-
-import numpy as np
 import requests
 from PIL import Image
-from skimage import io, measure
+from skimage import io
 
 import cv2
 import validators
 from auth import AuthError, requires_auth
 from flask import Flask, abort, jsonify, request
-from image_comparison import compare_images
 
 
 class ImageComparison:
     """ Class for image comparison.
 
-    ImageComparison compares the similarity of two images. 
+    ImageComparison compares the similarity of two images.
 
 
     """
 
-    def isSameImg(self, imageA, imageB):
+    def is_same_img(self, image_a, image_b):
         """ Checks if the given two images are the same.
 
         Args:
-            imageA:
-            imageB:
+            image_a: The first image for image comparison
+            image_b: The second image for image comparison 
 
         Returns:
-
+            Boolean. True if the two given images are the same; False,
+            otherwise. 
         """
-        if imageA.shape == imageB.shape:
-            diff = cv2.subtract(imageA, imageB)
+        if image_a.shape == image_b.shape:
+            diff = cv2.subtract(image_a, image_b)
             b, g, r = cv2.split(diff)
             return (cv2.countNonZero(b) == 0 and
                     cv2.countNonZero(g) == 0 and
                     cv2.countNonZero(r) == 0)
         return False
 
-    def compare_images(self, imageAPath, imageBPath):
+    def compare_images(self, image_a_path, image_b_path):
         """ Compares the similarity of the two given images.
 
         The image comparison is caculated using fast library for approximate
         nearest neighbors and scale-invariant feature transform
 
         Args:
-            imageAPath: First image path for comparison. 
-            imageBPath: Second image path for comparison. 
+            image_a_path: First image path for comparison.
+            image_b_path: Second image path for comparison.
 
         Returns:
             Integer. The percentage of the similarity of two given images.
-            (0 completely different, 100 the same)  
+            (0 completely different, 100 the same)
 
         """
         # Read the image from local files or url
-        imageA = io.imread(imageAPath) if validators.url(
-            imageAPath) else cv2.imread(imageAPath)
-        imageB = io.imread(imageBPath) if validators.url(
-            imageBPath) else cv2.imread(imageBPath)
+        image_a = io.imread(image_a_path) if validators.url(
+            image_a_path) else cv2.imread(image_a_path)
+        image_b = io.imread(image_b_path) if validators.url(
+            image_b_path) else cv2.imread(image_b_path)
 
         # check the same image. If image the same, no need to compute the rest
-        if self.isSameImg(imageA, imageB):
+        if self.is_same_img(image_a, image_b):
             return 100
 
         # Check for similarities between the 2 images
         sift = cv2.xfeatures2d.SIFT_create()
-        kp_1, desc_1 = sift.detectAndCompute(imageA, None)
-        kp_2, desc_2 = sift.detectAndCompute(imageB, None)
+        kp_1, desc_1 = sift.detectAndCompute(image_a, None)
+        kp_2, desc_2 = sift.detectAndCompute(image_b, None)
         index_params = dict(algorithm=0, trees=5)
         search_params = dict()
         flann = cv2.FlannBasedMatcher(index_params, search_params)
