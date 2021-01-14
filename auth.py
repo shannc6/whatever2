@@ -13,7 +13,7 @@ API_AUDIENCE = 'image-comparison'
 
 ## AuthError Exception
 '''
-AuthError Exception
+Class for AuthError Exception
 A standardized way to communicate auth failure modes
 '''
 class AuthError(Exception):
@@ -25,11 +25,12 @@ class AuthError(Exception):
 ## Auth Header
 
 '''
-    it should attempt to get the header from the request
-        it should raise an AuthError if no header is present
-    it should attempt to split bearer and the token
-        it should raise an AuthError if the header is malformed
-    return the token part of the header
+    Get the header from the request.
+
+    Args: None
+    
+    Returns:
+        String. The token part of the header
 '''
 def get_token_auth_header():
     auth = request.headers.get('Authorization', None)
@@ -62,10 +63,14 @@ def get_token_auth_header():
     return token
 
 '''
-    @INPUTS
-        permission: string permission (i.e. 'post:drink')
-        payload: decoded jwt payload
-    return true otherwise
+    Check permission from the payload.
+
+    Args:
+        permission: String. permission (i.e. 'get:image-comparison')
+        payload: String. decoded jwt payload
+
+    Returns:
+        Boolean. 
 '''
 def check_permissions(permission, payload):
     if 'permissions' not in payload:
@@ -82,10 +87,13 @@ def check_permissions(permission, payload):
     return True
 
 '''
-    @INPUTS
-        token: a json web token (string)
+    Decode the jwt token.
 
-    return the decoded payload
+    Args:
+        token: String. a json web token
+
+    Returns:
+        The decoded payload
 '''
 def verify_decode_jwt(token):
     jsonurl = urlopen(f'https://{AUTH0_DOMAIN}/.well-known/jwks.json')
@@ -141,9 +149,13 @@ def verify_decode_jwt(token):
             }, 400)
 
 '''
-    @INPUTS
-        permission: string permission (i.e. 'post:drink')
-    return the decorator which passes the decoded payload to the decorated method
+    Construct the decorator for the auth.
+
+    Args:
+        permission: String. permission (i.e. 'get:image-comparison')
+
+    Returns:    
+        The decorator which passes the decoded payload to the decorated method
 '''
 def requires_auth(permission=''):
     def requires_auth_decorator(f):
