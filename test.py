@@ -4,6 +4,7 @@ import json
 import sys
 from api import Image
 import config
+from image_comparison_app import ImageAPI
 
 class ImageComparisonTestCase(unittest.TestCase):
     def setUp(self):
@@ -11,8 +12,8 @@ class ImageComparisonTestCase(unittest.TestCase):
             'Content-Type': 'application/json',
             'Authorization': config.Bearer               
         }
-        self.image = Image()
-        self.app = self.image.create_app()
+        self.api = ImageAPI()
+        self.app = self.api.create_app()
         self.client = self.app.test_client
 
     def tearDown(self):
@@ -24,14 +25,14 @@ class ImageComparisonTestCase(unittest.TestCase):
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
-        self.assertEqual(data['percentage'], "100%")
+        self.assertEqual(data['percentage'], "100.00%")
 
     def test_identical_image_url(self):
         res = self.client().get('/image-comparison?imageA=https://consequenceofsound.net/wp-content/uploads/2019/05/pikachu-e1557247424342.jpg?quality=80&imageB=https://consequenceofsound.net/wp-content/uploads/2019/05/pikachu-e1557247424342.jpg?quality=80', headers=self.headers)
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
-        self.assertEqual(data['percentage'], "100%")
+        self.assertEqual(data['percentage'], "100.00%")
 
     def test_different_image_local(self):
         res = self.client().get('/image-comparison?imageA=image/original_golden_bridge.jpg&imageB=image/old_photo.jpg', headers=self.headers)
