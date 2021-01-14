@@ -18,8 +18,11 @@ from image_comparison import compare_images
 class ImageComparison:
     """ Class for image comparison.
 
+    ImageComparison compares the similarity of two images. 
+
 
     """
+
     def isSameImg(self, imageA, imageB):
         """ Checks if the given two images are the same.
 
@@ -33,29 +36,36 @@ class ImageComparison:
         if imageA.shape == imageB.shape:
             diff = cv2.subtract(imageA, imageB)
             b, g, r = cv2.split(diff)
-            return (cv2.countNonZero(b) == 0 and cv2.countNonZero(g) == 0 and cv2.countNonZero(r) == 0)
+            return (cv2.countNonZero(b) == 0 and
+                    cv2.countNonZero(g) == 0 and
+                    cv2.countNonZero(r) == 0)
         return False
 
     def compare_images(self, imageAPath, imageBPath):
-        """ Compares the structural similarity of the two given images.
+        """ Compares the similarity of the two given images.
+
+        The image comparison is caculated using fast library for approximate
+        nearest neighbors and scale-invariant feature transform
 
         Args:
-            imageAPath:
-            imageBPath:
+            imageAPath: First image path for comparison. 
+            imageBPath: Second image path for comparison. 
 
         Returns:
-            Return string: percentage
-            The percentage of the similarity of two given images.
-            (0 completely different, 1 the same)  
-        
+            Integer. The percentage of the similarity of two given images.
+            (0 completely different, 100 the same)  
+
         """
-        # read the image from local files or url
-        imageA = io.imread(imageAPath) if validators.url(imageAPath) else cv2.imread(imageAPath)
-        imageB = io.imread(imageBPath) if validators.url(imageBPath) else cv2.imread(imageBPath)
+        # Read the image from local files or url
+        imageA = io.imread(imageAPath) if validators.url(
+            imageAPath) else cv2.imread(imageAPath)
+        imageB = io.imread(imageBPath) if validators.url(
+            imageBPath) else cv2.imread(imageBPath)
+
         # check the same image. If image the same, no need to compute the rest
         if self.isSameImg(imageA, imageB):
             return 100
-        
+
         # Check for similarities between the 2 images
         sift = cv2.xfeatures2d.SIFT_create()
         kp_1, desc_1 = sift.detectAndCompute(imageA, None)
@@ -75,12 +85,14 @@ class ImageComparison:
         percentage = len(good_points) / number_keypoints * 100
         return percentage
 
+
 class ImageAPI:
+    """API for image comparison.
     """
 
-    """
     def create_app(self, test_config=None):
         app = Flask(__name__)
+
         @app.route('/image-comparison', methods=['GET'])
         @requires_auth('get:image-comparison')
         def get_percent(jwt):
@@ -88,7 +100,8 @@ class ImageAPI:
                 imageA = request.args.get('imageA')
                 imageB = request.args.get('imageB')
                 image_comparison = ImageComparison()
-                percentage = '{0:.2f}'.format(image_comparison.compare_images(imageA, imageB)) + "%"
+                percentage = '{0:.2f}'.format(
+                    image_comparison.compare_images(imageA, imageB)) + "%"
                 return jsonify({
                     'success': True,
                     'percentage': percentage
@@ -113,6 +126,7 @@ class ImageAPI:
                 'message': e.error
             }), 401
         return app
+
 
 if __name__ == "__main__":
     image = Image()

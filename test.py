@@ -6,11 +6,15 @@ from api import Image
 import config
 from image_comparison_app import ImageAPI
 
+
 class ImageComparisonTestCase(unittest.TestCase):
+    """Unit tests for image comparison.
+    """
+
     def setUp(self):
         self.headers = {
             'Content-Type': 'application/json',
-            'Authorization': config.Bearer               
+            'Authorization': config.Bearer
         }
         self.api = ImageAPI()
         self.app = self.api.create_app()
@@ -19,9 +23,10 @@ class ImageComparisonTestCase(unittest.TestCase):
     def tearDown(self):
         """Executed after reach test"""
         pass
- 
+
     def test_identical_image_local(self):
-        res = self.client().get('/image-comparison?imageA=image/black.jpg&imageB=image/black.jpg', headers=self.headers)
+        res = self.client().get(
+            '/image-comparison?imageA=image/black.jpg&imageB=image/black.jpg', headers=self.headers)
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
@@ -35,7 +40,8 @@ class ImageComparisonTestCase(unittest.TestCase):
         self.assertEqual(data['percentage'], "100.00%")
 
     def test_different_image_local(self):
-        res = self.client().get('/image-comparison?imageA=image/original_golden_bridge.jpg&imageB=image/old_photo.jpg', headers=self.headers)
+        res = self.client().get(
+            '/image-comparison?imageA=image/original_golden_bridge.jpg&imageB=image/old_photo.jpg', headers=self.headers)
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
@@ -67,8 +73,10 @@ class ImageComparisonTestCase(unittest.TestCase):
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 401)
         self.assertEqual(data['success'], False)
-        self.assertEqual(data['message']['code'], 'authorization_header_missing')
-        self.assertEqual(data['message']['description'], 'Authorization header is expected.')
+        self.assertEqual(data['message']['code'],
+                         'authorization_header_missing')
+        self.assertEqual(data['message']['description'],
+                         'Authorization header is expected.')
 
     def test_broken_url(self):
         res = self.client().get('/image-comparison?imageA=https://consequenceofsound.net/wp-content/uploads/2019/05/pikachu-e1557247424342.jp&imageB=https://consequenceofsound.net/wp-content/uploads/2019/05/pikachu-e1557247424342.jp', headers=self.headers)
@@ -77,8 +85,6 @@ class ImageComparisonTestCase(unittest.TestCase):
         self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'resource not found')
 
-    
-        
-# Make the tests conveniently executable
+
 if __name__ == "__main__":
     unittest.main()
