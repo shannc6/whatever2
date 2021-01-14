@@ -30,15 +30,17 @@ class ImageComparisonTestCase(unittest.TestCase):
         self.image = Image()
         self.app = self.image.create_app()
         self.client = self.app.test_client
-        
+
     # def tearDown(self):
     #     """Executed after reach test"""
     #     pass
  
     def test_identical_image_local(self):
+        # print("test cliet" + self.app.test_client)
         res = self.client().get('/image-comparison?imageA=image/black.jpg&imageB=image/black.jpg')
         data = json.loads(res.data)
 
+        print(res)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
         self.assertEqual(data['percentage'], "100%")

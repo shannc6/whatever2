@@ -6,19 +6,17 @@ import cv2
 from flask import Flask, abort, jsonify, request
 from image_comparison import compare_images
 from auth import AuthError, requires_auth
-from config import *
+import config
 import datetime
+import jwt
+from jwt import PyJWKClient
 
 class Image:
-    def __init__(self):
-        self.blank = 0
-
     def encode_auth_token(self):
         """
         Generates the Auth Token
         :return: string
         """
-        print("yo")
         try:
             payload = {
                 'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=5),
@@ -29,12 +27,12 @@ class Image:
                 config.Bearer,
                 algorithm='RS256'
             )
+            
         except Exception as e:
             return e
 
-    def create_app(test_config=None):
+    def create_app(self, test_config=None):
         app = Flask(__name__)
-        self.encode_auth_token()
 
         @app.route('/image-comparison', methods=['GET'])
         @requires_auth('get:image-comparison')
