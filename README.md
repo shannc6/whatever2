@@ -28,7 +28,7 @@ pip install -r requirements.txt
 
 ## Running the server
 
-From within the `./src` directory first ensure you are working using your created virtual environment.
+Ensure you are working using your created virtual environment.
 
 Each time you open a new terminal session, run:
 
@@ -63,8 +63,8 @@ The `--reload` flag will detect file changes and restart the server automaticall
 
 ## Endpoints Reference
 
-GET '/image-comparison?imageA=<imagePath>&imageB=<imagePath>'
-- Fetches two local picture for comparison
+GET '/image-comparison?imageA=<image_path>&imageB=<image_path>'
+- Fetches two pictures for comparison
 - imagePath could be local file or url
 - Request Arguments: None
 - Returns: A simliarity percentage
