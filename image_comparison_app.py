@@ -1,21 +1,17 @@
 import requests
 from PIL import Image
 from skimage import io
-
 import cv2
 import validators
 from auth import AuthError, requires_auth
 from flask import Flask, abort, jsonify, request
-
 
 class ImageComparison:
     """ Class for image comparison.
 
     ImageComparison compares the similarity of two images.
 
-
     """
-
     def is_same_img(self, image_a, image_b):
         """ Checks if the given two images are the same.
 
@@ -46,7 +42,7 @@ class ImageComparison:
             image_b_path: Second image path for comparison.
 
         Returns:
-            Integer. The percentage of the similarity of two given images.
+            Float. The percentage of the similarity of two given images.
             (0 completely different, 100 the same)
 
         """
@@ -82,6 +78,8 @@ class ImageComparison:
 
 class ImageAPI:
     """API for image comparison.
+    
+    GET method and need authentication key.
     """
 
     def create_app(self, test_config=None):
@@ -120,7 +118,6 @@ class ImageAPI:
                 'message': e.error
             }), 401
         return app
-
 
 if __name__ == "__main__":
     image = Image()

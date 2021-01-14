@@ -12,10 +12,10 @@ ALGORITHMS = ['RS256']
 API_AUDIENCE = 'image-comparison'
 
 ## AuthError Exception
-'''
+"""
 Class for AuthError Exception
 A standardized way to communicate auth failure modes
-'''
+"""
 class AuthError(Exception):
     def __init__(self, error, status_code):
         self.error = error
@@ -24,14 +24,14 @@ class AuthError(Exception):
 
 ## Auth Header
 
-'''
+"""
     Get the header from the request.
 
     Args: None
     
     Returns:
         String. The token part of the header
-'''
+"""
 def get_token_auth_header():
     auth = request.headers.get('Authorization', None)
     if not auth:
@@ -62,7 +62,7 @@ def get_token_auth_header():
     token = parts[1]
     return token
 
-'''
+"""
     Check permission from the payload.
 
     Args:
@@ -70,8 +70,8 @@ def get_token_auth_header():
         payload: String. decoded jwt payload
 
     Returns:
-        Boolean. 
-'''
+        Boolean. True is authorized, False otherwise.
+"""
 def check_permissions(permission, payload):
     if 'permissions' not in payload:
                         raise AuthError({
@@ -86,7 +86,7 @@ def check_permissions(permission, payload):
         }, 403)
     return True
 
-'''
+"""
     Decode the jwt token.
 
     Args:
@@ -94,7 +94,7 @@ def check_permissions(permission, payload):
 
     Returns:
         The decoded payload
-'''
+"""
 def verify_decode_jwt(token):
     jsonurl = urlopen(f'https://{AUTH0_DOMAIN}/.well-known/jwks.json')
     jwks = json.loads(jsonurl.read())
@@ -148,7 +148,7 @@ def verify_decode_jwt(token):
                 'description': 'Unable to find the appropriate key.'
             }, 400)
 
-'''
+"""
     Construct the decorator for the auth.
 
     Args:
@@ -156,7 +156,7 @@ def verify_decode_jwt(token):
 
     Returns:    
         The decorator which passes the decoded payload to the decorated method
-'''
+"""
 def requires_auth(permission=''):
     def requires_auth_decorator(f):
         @wraps(f)
