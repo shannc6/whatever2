@@ -12,6 +12,11 @@ Follow instructions to install the latest version of python for your platform in
 
 Working within a virtual environment is recommended whenever using Python for projects. This keeps your dependencies for each project separate and organaized. Instructions for setting up a virual enviornment for your platform can be found in the [python docs](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/)
 
+#### PIP Dependencies
+Once you have your virtual environment running. Install dependencies by
+```bash
+pip install -r requirements.txt
+```
 
 ##### Key Dependencies
 
@@ -94,7 +99,12 @@ Authentication error (401)
     "success": false
 }
 ```
-
+#### Test
+To run the test, run 
+```bash
+python test.py
+```
+The authentication key will expires in 24 hours, please ask for new authentication token if you need access.
 
 ## Authors
 Chia-Ning (Jeffrey) Lee is in charged of backend Web Api.
